@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparação de Quantidades</title>
+<style>
+    /* Estilo para o body */
+    body {
+        background-color: #f0f0f0;
+        text-align: center; /* Centraliza o conteúdo */
+        color: #000000; /* Cor do texto */
+    }
+
+    /* Estilo para os títulos */
+    h1 {
+        margin-top: 20px; /* Espaçamento acima do título */
+    }
+
+    /* Ajustando a largura e a altura das caixas de texto */
+    textarea {
+        width: 300px;
+        height: 300px;
+        padding: 10px; /* Adicionando preenchimento interno */
+        font-size: 16px; /* Definindo o tamanho da fonte */
+        border: 1px solid #ccc; /* Adicionando uma borda sólida */
+        border-radius: 5px; /* Arredondando as bordas */
+        resize: none; /* Impede que o usuário redimensione a caixa de texto */
+        margin: 10px; /* Espaçamento entre as caixas de texto */
+        display: inline-block; /* Permite centralizar horizontalmente */
+        vertical-align: top; /* Alinha as caixas de texto pela parte superior */
+    }
+
+    /* Estilo para os botões */
+    button {
+        margin-top: 10px; /* Espaçamento acima dos botões */
+        padding: 10px 20px; /* Espaçamento interno dos botões */
+        font-size: 16px; /* Tamanho da fonte dos botões */
+        border: none; /* Remove a borda dos botões */
+        border-radius: 5px; /* Arredonda as bordas dos botões */
+        background-color: #007bff; /* Cor de fundo dos botões */
+        color: #ffffff; /* Cor do texto dos botões */
+        cursor: pointer; /* Muda o cursor ao passar sobre os botões */
+    }
+
+    /* Estilo para o botão de limpar */
+    button.limpar {
+        background-color: #dc3545; /* Cor de fundo do botão de limpar */
+        margin-right: 10px; /* Espaçamento à direita do botão de limpar */
+    }
+
+    /* Estilo para o botão de copiar */
+    button.copiar {
+        background-color: #28a745; /* Cor de fundo do botão de copiar */
+    }
+
+    /* Estilo para os rótulos */
+    label {
+        display: block; /* Exibe os rótulos como blocos */
+        margin-bottom: 5px; /* Espaçamento abaixo dos rótulos */
+        font-weight: bold; /* Deixa o texto em negrito */
+    }
+
+    /* Estilo para o contêiner das caixas de texto */
+    .container {
+        text-align: center; /* Centraliza os elementos dentro do contêiner */
+    }
+
+    /* Estilo para as caixas de texto */
+    .text-box {
+        display: inline-block; /* Permite que as caixas de texto fiquem uma ao lado da outra */
+        margin: 10px; /* Espaçamento entre as caixas de texto */
+        vertical-align: top; /* Alinha as caixas de texto pela parte superior */
+    }
+</style>
+</head>
+<body>
+
+<h1>Comparação de Quantidades</h1>
+
+<div class="container">
+    <div class="text-box">
+        <label for="geral"></label>
+        <textarea id="geral" placeholder="Geral" wrap="soft"></textarea>
+    </div>
+    <div class="text-box">
+        <label for="pendentes"></label>
+        <textarea id="pendentes" placeholder="Pendentes" wrap="soft"></textarea>
+    </div>
+</div>
+
+<button class="comparar" onclick="compararQuantidades()">Comparar</button>
+<button class="limpar" onclick="limparCampos()">Limpar</button>
+<button class="copiar" onclick="copiarConteudo()">Copiar</button><br>
+
+<label for="resultado"></label><br>
+<textarea id="resultado" placeholder="Resultado" readonly></textarea>
+
+<script>
+function compararQuantidades() {
+    var geralValue = document.getElementById("geral").value.trim();
+    var pendentesValue = document.getElementById("pendentes").value.trim();
+    var resultado = document.getElementById("resultado");
+
+    // Contagem de cada número na caixa GERAL
+    var contagemGeral = {};
+    var numerosGeral = geralValue.match(/\d+/g);
+    numerosGeral.forEach(function(num) {
+        contagemGeral[num] = contagemGeral[num] ? contagemGeral[num] + 1 : 1;
+    });
+
+    // Contagem de cada número na caixa PENDENTES
+    var contagemPendentes = {};
+    var numerosPendentes = pendentesValue.match(/\d+/g);
+    numerosPendentes.forEach(function(num) {
+        contagemPendentes[num] = contagemPendentes[num] ? contagemPendentes[num] + 1 : 1;
+    });
+
+    // Comparar as contagens e obter os números cuja quantidade na caixa PENDENTES é menor que na caixa GERAL
+    var numerosMenorQuantidade = [];
+    for (var num in contagemPendentes) {
+        if (contagemGeral[num] && contagemPendentes[num] < contagemGeral[num]) {
+            numerosMenorQuantidade.push(num);
+        }
+    }
+
+    // Ordenar os números
+    numerosMenorQuantidade.sort(function(a, b) {
+        return a - b;
+    });
+
+    // Exibir o resultado na caixa de resultado
+    resultado.value = numerosMenorQuantidade.join('\n');
+}
+
+function limparCampos() {
+    document.getElementById("geral").value = "";
+    document.getElementById("pendentes").value = "";
+    document.getElementById("resultado").value = "";
+}
+
+function copiarConteudo() {
+    var resultado = document.getElementById("resultado");
+    resultado.select();
+    document.execCommand("copy");
+}
+</script>
+
+</body>
+</html>
